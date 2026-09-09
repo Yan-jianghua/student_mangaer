@@ -39,7 +39,8 @@ def menu():
             elif select_num == 4:
                 pass
             elif select_num == 5:
-                pass
+                show_students()
+                continue
             elif select_num == 6:
                 pass
             elif select_num == 0:
@@ -54,10 +55,28 @@ def menu():
 def add_student():
     name = input("请输入学生姓名：")
     sid = input("请输入学生的学号")
-    age = int(input("年龄："))
-    score = float(input("成绩"))
+    try:
+        age = int(input("年龄："))
+    except ValueError:
+        print("请输入正确的年龄:")
+    try:
+        score = float(input("成绩"))
+    except ValueError:
+        print("请输入正确的成绩")
     student={"name":name,"id":sid,"age":age,"score":score}
     students.append(student)
+    print("添加成功")
+
+def show_students():
+    if not students:
+        print("暂无学生，请添加")
+        return
+    else:
+        print("姓名\t学号\t年龄\t成绩")
+        for student in students:
+            print(f"{student['name']},{student['id']},{student['age']},{student['score']}")
+
+
 
 
 if __name__ == "__main__":
