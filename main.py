@@ -1,11 +1,10 @@
 # 学生管理系统 —— 项目入口文件
 students = []
+#主菜单
 def menu():
 # 1. 打印系统启动提示
     try:
         print("欢迎进入学生管理系统")
-
-        #2.主菜单
         while True:
             print("=========学生管理系统启动=============")
             print("请输入你要进行的操作所对应的序号:")
@@ -37,7 +36,8 @@ def menu():
             elif select_num == 3:
                 pass
             elif select_num == 4:
-                pass
+                find_student()
+                continue
             elif select_num == 5:
                 show_students()
                 continue
@@ -52,21 +52,43 @@ def menu():
         print("系统出错请联系工作人员")
         print(e)
 
+
+#增加学生操作
 def add_student():
+    add_operation = "添加学生"
     name = input("请输入学生姓名：")
-    sid = input("请输入学生的学号")
-    try:
-        age = int(input("年龄："))
-    except ValueError:
-        print("请输入正确的年龄:")
-    try:
-        score = float(input("成绩"))
-    except ValueError:
-        print("请输入正确的成绩")
+    while True:
+        sid = input("请输入学生的学号")
+        duplicate = False
+        for student in students:
+            if student["id"] == sid:
+                print("学号重复请重新输入")
+                duplicate = True
+                break
+        if duplicate:
+            continue
+        else:
+            break
+    while True:
+        try:
+            age = int(input("年龄："))
+            if 100 >= age >= 1:
+                break
+            else:
+                print("请输入正确的年龄")
+        except ValueError:
+            print("请输入正确的年龄:")
+    while True:
+        try:
+            score = float(input("成绩"))
+            break
+        except ValueError:
+            print("请输入正确的成绩")
     student={"name":name,"id":sid,"age":age,"score":score}
     students.append(student)
     print("添加成功")
 
+#显示全部学生信息
 def show_students():
     if not students:
         print("暂无学生，请添加")
@@ -74,10 +96,47 @@ def show_students():
     else:
         print("姓名\t学号\t年龄\t成绩")
         for student in students:
-            print(f"{student['name']},{student['id']},{student['age']},{student['score']}")
+            print(f"{student['name']}\t{student['id']}\t{student['age']}\t{student['score']}")
 
+#查询学生信息
+def find_student():
+    find_operation = "查找学生"
+    try:
+        while True:
+            print("通过学号查找 -- 1")
+            print("通过姓名查找 -- 2")
+            print("返回主菜单 -- 0")
+            query_method = int(input("请输入你要查找的方式:"))
 
-
+            if query_method == 1:
+                sid = input("请输入你要查询学生的学号:")
+                found = False
+                for student in students:
+                    if student["id"] == sid:
+                        print("姓名\t学号\t年龄\t成绩")
+                        print(f"{student['name']}\t{student['id']}\t{student['age']}\t{student['score']}")
+                        found = True
+                        break
+                if not found:
+                    print("未查询到该学生")
+            elif query_method == 2:
+                name = input("请输入你要查找的学生姓名")
+                found = False
+                for student in students:
+                    if student["name"] == name:
+                        print("姓名\t学号\t年龄\t成绩")
+                        print(f"{student['name']}\t{student['id']}\t{student['age']}\t{student['score']}")
+                        found = True
+                        break
+                if not found:
+                    print("未查询到学生信息")
+            elif query_method == 0:
+                return
+            else:
+                print("请输入正确的查询方式的序号")
+                continue
+    except ValueError:
+        print("请输入正确的查询方式的序号")
 
 if __name__ == "__main__":
     menu()
