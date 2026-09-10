@@ -45,7 +45,8 @@ def menu():
                 show_students()
                 continue
             elif select_num == 6:
-                pass
+                statistics_students()
+                continue
             elif select_num == 0:
                 print("退出系统成功")
                 break
@@ -96,6 +97,10 @@ def add_student():
 
 #显示全部学生信息
 def show_students():
+    """
+    显示出全部学生信息
+    :return:
+    """
     if not students:
         print("暂无学生，请添加")
         return
@@ -236,6 +241,33 @@ def modify_student():
                         break
                     else:
                         print("输入有误请输入正确的编号")
+#统计
+def statistics_students():
+    if not students:
+        print("暂无学生，无法统计")
+        return
+    else:
+        print(f"班级总人数{len(students)}")
+        max_score = 0
+        min_score = 100
+        total_score = 0
+        first_student = []
+        last_student = []
+        for student in students:
+            total_score += student["score"]
+            if student["score"] >= max_score:
+                max_score = student["score"]
+            if student["score"] <= min_score:
+                min_score = student["score"]
+        for student in students:
+            if student["score"] == max_score:
+                first_student.append(student["name"])
+            if student["score"] == min_score:
+                last_student.append(student["name"])
+        print(f"最高分为{first_student},{max_score}分")
+        print(f"最低分为{last_student},{min_score}分")
+        print(f"平均分{total_score/len(students):.2f}")
+        return
 
 
 
