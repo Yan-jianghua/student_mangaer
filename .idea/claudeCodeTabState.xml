@@ -6,10 +6,11 @@
         <entry key="0">
           <value>
             <TabSessionState>
-              <option name="provider" value="claude" />
+              <option name="provider" value="codex" />
+              <option name="sessionId" value="01a089a8-ba30-7a53-aff2-83b0978ca11a" />
               <option name="cwd" value="C:\Users\y'j'h\student_mangaer" />
-              <option name="model" value="claude-sonnet-5" />
-              <option name="permissionMode" value="acceptEdits" />
+              <option name="model" value="gpt-5.6-sol" />
+              <option name="permissionMode" value="default" />
             </TabSessionState>
           </value>
         </entry>
