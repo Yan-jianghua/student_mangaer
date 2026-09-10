@@ -1,4 +1,5 @@
 # 学生管理系统 —— 项目入口文件
+
 students = []
 #主菜单
 def menu():
@@ -35,7 +36,8 @@ def menu():
                 delete_student()
                 continue
             elif select_num == 3:
-                pass
+                modify_student()
+                continue
             elif select_num == 4:
                 find_student()
                 continue
@@ -82,7 +84,10 @@ def add_student():
     while True:
         try:
             score = float(input("成绩"))
-            break
+            if 0 <= score <= 100:
+                break
+            else:
+                print("请输入正确的成绩")
         except ValueError:
             print("请输入正确的成绩")
     student={"name":name,"id":sid,"age":age,"score":score}
@@ -138,6 +143,7 @@ def find_student():
                 continue
     except ValueError:
         print("请输入正确的查询方式的序号")
+
 #删除学生信息
 def delete_student():
     while True:
@@ -158,6 +164,80 @@ def delete_student():
                 continue
             else:
                 break
+
+#修改学号
+def modify_id(student):
+    while True:
+        sid = input("请输入修改后的学号:")
+        duplicate = False
+        for other_student in students:
+            if other_student is not student and other_student["id"] == sid:
+                print("学号重复请重新输入")
+                duplicate = True
+                break
+        if duplicate:
+            continue
+        else:
+            student["id"] = sid
+            print("修改成功")
+            return
+#修改姓名
+def modify_name(student):
+    name = input("请输入修改后学生的姓名：")
+    student["name"] = name
+    print("修改成功")
+    return
+#修改成绩
+def modify_score(student):
+    while True:
+        try:
+            score = float(input("请输入修改后学生的成绩："))
+        except ValueError:
+            print("输入成绩有误请重新输入")
+            continue
+        if score < 0 or score > 100:
+            print("成绩输入有误请重新输入")
+        else:
+            student["score"] = score
+            print("修改成功")
+            return
+#修改学生信息
+def modify_student():
+    while True:
+        s = []
+        print("这里是修改学生信息界面若需返回主菜单请输入：*")
+        modify_sid = input("请输入你要修改的学生的学号:")
+        if modify_sid == "*":
+            return
+        else:
+            found = False
+            for student in students:
+                if student["id"] == modify_sid:
+                    found = True
+                    s = student
+                    break
+            if not found:
+                print("没有该学生信息")
+            else:
+                while True:
+                    print("修改姓名请按-------1\n修改学号请按-------2\n修改成绩请按------3\n修改其他学生请按------0")
+                    try:
+                        modify_select = int(input("请输入你要进行的操作："))
+                    except ValueError:
+                        print("请输入有效数字")
+                        continue
+                    if modify_select == 1:
+                        modify_name(s)
+                    elif modify_select == 2:
+                        modify_id(s)
+                    elif modify_select == 3:
+                        modify_score(s)
+                    elif modify_select == 0:
+                        break
+                    else:
+                        print("输入有误请输入正确的编号")
+
+
 
 if __name__ == "__main__":
     menu()
