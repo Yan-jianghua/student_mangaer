@@ -1,10 +1,50 @@
 import storage
+from typing import TypedDict
 
 
-def add_student(students):
+class Student(TypedDict):
+    """学生记录的数据结构。"""
+
+    id: str
+    name: str
+    age: int
+    score: float
+
+
+def _input_age() -> int:
+    """持续读取输入，直到获得有效年龄。"""
+    valid_age: int | None = None
+    while valid_age is None:
+        try:
+            age = int(input("年龄："))
+        except ValueError:
+            print("请输入正确的年龄")
+            continue
+        if 1 <= age <= 100:
+            valid_age = age
+        else:
+            print("请输入正确的年龄")
+    return valid_age
+
+
+def _input_score(prompt: str, error_message: str) -> float:
+    """持续读取输入，直到获得 0 到 100 之间的成绩。"""
+    valid_score: float | None = None
+    while valid_score is None:
+        try:
+            score = float(input(prompt))
+        except ValueError:
+            print(error_message)
+            continue
+        if 0 <= score <= 100:
+            valid_score = score
+        else:
+            print(error_message)
+    return valid_score
+
+
+def add_student(students: list[Student]) -> None:
     """增加一名学生。"""
-    name = input("请输入学生姓名：")
-
     while True:
         sid = input("请输入学生的学号：")
         if any(student["id"] == sid for student in students):
@@ -12,47 +52,33 @@ def add_student(students):
             continue
         break
 
-    while True:
-        try:
-            age = int(input("年龄："))
-        except ValueError:
-            print("请输入正确的年龄")
-            continue
-        if 1 <= age <= 100:
-            break
-        print("请输入正确的年龄")
+    name = input("请输入学生姓名：")
 
-    while True:
-        try:
-            score = float(input("成绩："))
-        except ValueError:
-            print("请输入正确的成绩")
-            continue
-        if 0 <= score <= 100:
-            break
-        print("请输入正确的成绩")
+    age = _input_age()
+    score = _input_score("成绩：", "请输入正确的成绩")
 
     students.append({"name": name, "id": sid, "age": age, "score": score})
     storage.save_student(students)
     print("添加成功")
 
 
-def show_students(students):
+def show_students(students: list[Student]) -> None:
     """显示全部学生信息。"""
     if not students:
         print("暂无学生，请添加")
         return
 
-    print("姓名\t学号\t年龄\t成绩")
+    print("学号\t姓名\t年龄\t成绩")
     for student in students:
-        print(f"{student['name']}\t{student['id']}\t{student['age']}\t{student['score']}")
+        print(f"{student['id']}\t{student['name']}\t{student['age']}\t{student['score']}")
 
 
-def find_student(students):
+def find_student(students: list[Student]) -> None:
     """按学号或姓名查询学生。"""
     while True:
         print("通过学号查找 -- 1")
         print("通过姓名查找 -- 2")
+        print("查询成绩区间内的学生信息 -- 3")
         print("返回主菜单 -- 0")
 
         try:
@@ -67,6 +93,24 @@ def find_student(students):
         elif query_method == 2:
             name = input("请输入你要查找的学生姓名：")
             matches = [student for student in students if student["name"] == name]
+        elif query_method == 3:
+            matches = []
+            while True:
+                try:
+                    score_top = float(input("请输入要查询的成绩区间上限："))
+                    score_bottom = float(input("请输入要查询的成绩区间下限："))
+                except ValueError:
+                    print("请输入正确的成绩区间")
+                    continue
+                if not 0 <= score_bottom <= score_top <= 100:
+                    print("请输入正确的查询区间")
+                else:
+                    matches = [
+                        student
+                        for student in students
+                        if score_bottom <= student["score"] <= score_top
+                    ]
+                    break
         elif query_method == 0:
             return
         else:
@@ -77,12 +121,12 @@ def find_student(students):
             print("未查询到学生信息")
             continue
 
-        print("姓名\t学号\t年龄\t成绩")
+        print("学号\t姓名\t年龄\t成绩")
         for student in matches:
-            print(f"{student['name']}\t{student['id']}\t{student['age']}\t{student['score']}")
+            print(f"{student['id']}\t{student['name']}\t{student['age']}\t{student['score']}")
 
 
-def delete_student(students):
+def delete_student(students: list[Student]) -> None:
     """按学号删除学生。"""
     while True:
         print("这里是删除学生信息界面，返回主菜单请输入*")
@@ -100,7 +144,7 @@ def delete_student(students):
         print("未查询到该学生信息")
 
 
-def modify_id(student, students):
+def modify_id(student: Student, students: list[Student]) -> None:
     """修改学生学号。"""
     while True:
         sid = input("请输入修改后的学号：")
@@ -118,33 +162,24 @@ def modify_id(student, students):
         return
 
 
-def modify_name(student, students):
+def modify_name(student: Student, students: list[Student]) -> None:
     """修改学生姓名。"""
     student["name"] = input("请输入修改后学生的姓名：")
     storage.save_student(students)
     print("修改成功")
 
 
-def modify_score(student, students):
+def modify_score(student: Student, students: list[Student]) -> None:
     """修改学生成绩。"""
-    while True:
-        try:
-            score = float(input("请输入修改后学生的成绩："))
-        except ValueError:
-            print("输入成绩有误，请重新输入")
-            continue
-
-        if not 0 <= score <= 100:
-            print("成绩输入有误，请重新输入")
-            continue
-
-        student["score"] = score
-        storage.save_student(students)
-        print("修改成功")
-        return
+    student["score"] = _input_score(
+        "请输入修改后学生的成绩：",
+        "成绩输入有误，请重新输入",
+    )
+    storage.save_student(students)
+    print("修改成功")
 
 
-def modify_student(students):
+def modify_student(students: list[Student]) -> None:
     """根据学号选择并修改学生信息。"""
     while True:
         print("这里是修改学生信息界面，若需返回主菜单请输入：*")
@@ -159,6 +194,7 @@ def modify_student(students):
         if student is None:
             print("没有该学生信息")
             continue
+        selected_student: Student = student
 
         while True:
             print("修改姓名请按-------1")
@@ -172,18 +208,18 @@ def modify_student(students):
                 continue
 
             if modify_select == 1:
-                modify_name(student, students)
+                modify_name(selected_student, students)
             elif modify_select == 2:
-                modify_id(student, students)
+                modify_id(selected_student, students)
             elif modify_select == 3:
-                modify_score(student, students)
+                modify_score(selected_student, students)
             elif modify_select == 0:
                 break
             else:
                 print("输入有误，请输入正确的编号")
 
 
-def statistics_students(students):
+def statistics_students(students: list[Student]) -> None:
     """统计班级人数、平均分、最高分和最低分。"""
     if not students:
         print("暂无学生，无法统计")

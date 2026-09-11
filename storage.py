@@ -5,6 +5,26 @@ from pathlib import Path
 DATA_FILE = Path(__file__).with_name("students.json")
 
 
+def _is_valid_student(student):
+    """判断一条学生数据是否具有系统所需的完整结构。"""
+    if not isinstance(student, dict):
+        return False
+
+    if set(student) != {"id", "name", "age", "score"}:
+        return False
+
+    return (
+        isinstance(student["id"], str)
+        and isinstance(student["name"], str)
+        and isinstance(student["age"], int)
+        and not isinstance(student["age"], bool)
+        and 1 <= student["age"] <= 100
+        and isinstance(student["score"], (int, float))
+        and not isinstance(student["score"], bool)
+        and 0 <= student["score"] <= 100
+    )
+
+
 def save_student(students, data_file=DATA_FILE):
     """把学生列表保存到 JSON 文件。"""
     with data_file.open("w", encoding="utf-8") as file:
@@ -23,8 +43,8 @@ def load_student(data_file=DATA_FILE):
         print("数据异常，将采用空列表，如有数据丢失请联系工作人员")
         return []
 
-    if isinstance(data, list):
+    if isinstance(data, list) and all(_is_valid_student(item) for item in data):
         return data
 
-    print("列表读取失败，将采用空列表，如有数据丢失请联系工作人员")
+    print("数据格式异常，将采用空列表，如有数据丢失请联系工作人员")
     return []
