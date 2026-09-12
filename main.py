@@ -1,8 +1,6 @@
 # 学生管理系统 —— 项目入口文件
 import service
 import storage
-
-
 # 主菜单
 def menu():
     print("欢迎进入学生管理系统")

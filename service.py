@@ -1,7 +1,5 @@
 import storage
 from typing import TypedDict
-
-
 class Student(TypedDict):
     """学生记录的数据结构。"""
 
