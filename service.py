@@ -1,13 +1,5 @@
 import storage
-from typing import TypedDict
-class Student(TypedDict):
-    """学生记录的数据结构。"""
-
-    id: str
-    name: str
-    age: int
-    score: float
-
+from models import Student
 
 def _input_age() -> int:
     """持续读取输入，直到获得有效年龄。"""
@@ -44,8 +36,8 @@ def _input_score(prompt: str, error_message: str) -> float:
 def add_student(students: list[Student]) -> None:
     """增加一名学生。"""
     while True:
-        sid = input("请输入学生的学号：")
-        if any(student["id"] == sid for student in students):
+        sid = input("请输入要增加的学生的学号")
+        if any(student.id == sid for student in students):
             print("学号重复，请重新输入")
             continue
         break
@@ -55,7 +47,7 @@ def add_student(students: list[Student]) -> None:
     age = _input_age()
     score = _input_score("成绩：", "请输入正确的成绩")
 
-    students.append({"name": name, "id": sid, "age": age, "score": score})
+    students.append(Student(sid,name,age,score))
     storage.save_student(students)
     print("添加成功")
 
@@ -68,7 +60,7 @@ def show_students(students: list[Student]) -> None:
 
     print("学号\t姓名\t年龄\t成绩")
     for student in students:
-        print(f"{student['id']}\t{student['name']}\t{student['age']}\t{student['score']}")
+        print(f"{student.id}\t{student.name}\t{student.get_age()}\t{student.get_score()}")
 
 
 def find_student(students: list[Student]) -> None:
@@ -87,10 +79,10 @@ def find_student(students: list[Student]) -> None:
 
         if query_method == 1:
             sid = input("请输入你要查询学生的学号：")
-            matches = [student for student in students if student["id"] == sid]
+            matches = [student for student in students if student.id == sid]
         elif query_method == 2:
             name = input("请输入你要查找的学生姓名：")
-            matches = [student for student in students if student["name"] == name]
+            matches = [student for student in students if student.name == name]
         elif query_method == 3:
             matches = []
             while True:
@@ -106,7 +98,7 @@ def find_student(students: list[Student]) -> None:
                     matches = [
                         student
                         for student in students
-                        if score_bottom <= student["score"] <= score_top
+                        if score_bottom <= student.get_score() <= score_top
                     ]
                     break
         elif query_method == 0:
@@ -121,7 +113,7 @@ def find_student(students: list[Student]) -> None:
 
         print("学号\t姓名\t年龄\t成绩")
         for student in matches:
-            print(f"{student['id']}\t{student['name']}\t{student['age']}\t{student['score']}")
+            print(f"{student.id}\t{student.name}\t{student.get_age()}\t{student.get_score()}")
 
 
 def delete_student(students: list[Student]) -> None:
@@ -133,7 +125,7 @@ def delete_student(students: list[Student]) -> None:
             return
 
         for student in students:
-            if student["id"] == delete_id:
+            if student.id == delete_id:
                 students.remove(student)
                 storage.save_student(students)
                 print("删除成功")
@@ -147,14 +139,14 @@ def modify_id(student: Student, students: list[Student]) -> None:
     while True:
         sid = input("请输入修改后的学号：")
         duplicate = any(
-            other_student is not student and other_student["id"] == sid
+            other_student is not student and other_student.id == sid
             for other_student in students
         )
         if duplicate:
             print("学号重复，请重新输入")
             continue
 
-        student["id"] = sid
+        student.id = sid
         storage.save_student(students)
         print("修改成功")
         return
@@ -162,17 +154,17 @@ def modify_id(student: Student, students: list[Student]) -> None:
 
 def modify_name(student: Student, students: list[Student]) -> None:
     """修改学生姓名。"""
-    student["name"] = input("请输入修改后学生的姓名：")
+    student.name = input("请输入修改后学生的姓名：")
     storage.save_student(students)
     print("修改成功")
 
 
 def modify_score(student: Student, students: list[Student]) -> None:
     """修改学生成绩。"""
-    student["score"] = _input_score(
+    student.set_score(_input_score(
         "请输入修改后学生的成绩：",
         "成绩输入有误，请重新输入",
-    )
+    ))
     storage.save_student(students)
     print("修改成功")
 
@@ -186,7 +178,7 @@ def modify_student(students: list[Student]) -> None:
             return
 
         student = next(
-            (item for item in students if item["id"] == modify_sid),
+            (item for item in students if item.id == modify_sid),
             None,
         )
         if student is None:
@@ -223,14 +215,14 @@ def statistics_students(students: list[Student]) -> None:
         print("暂无学生，无法统计")
         return
 
-    scores = [student["score"] for student in students]
+    scores = [student.get_score() for student in students]
     max_score = max(scores)
     min_score = min(scores)
     first_students = [
-        student["name"] for student in students if student["score"] == max_score
+        student.name for student in students if student.get_score() == max_score
     ]
     last_students = [
-        student["name"] for student in students if student["score"] == min_score
+        student.name for student in students if student.get_score() == min_score
     ]
 
     print(f"班级总人数{len(students)}")
