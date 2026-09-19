@@ -7,7 +7,7 @@ class StudentTests(unittest.TestCase):
     def test_create_student(self):
         student = Student("001", "小明", 18, 95)
 
-        self.assertEqual(student.id, "001")
+        self.assertEqual(student.student_id, "001")
         self.assertEqual(student.name, "小明")
         self.assertEqual(student.get_age(), 18)
         self.assertEqual(student.get_score(), 95)
@@ -76,7 +76,7 @@ class StudentTests(unittest.TestCase):
         }
         student = Student.from_dict(data)
         self.assertIsInstance(student, Student)
-        self.assertEqual(student.id, "001")
+        self.assertEqual(student.student_id, "001")
         self.assertEqual(student.name, "小华")
         self.assertEqual(student.get_age(), 18)
         self.assertEqual(student.get_score(), 95)

@@ -31,7 +31,7 @@ class ServiceTests(unittest.TestCase):
         with redirect_stdout(io.StringIO()):
             service.add_student(students)
 
-        self.assertEqual(students[-1].id, "002")
+        self.assertEqual(students[-1].student_id, "002")
         save_student.assert_called_once_with(students)
 
     def test_show_students(self):
@@ -75,7 +75,7 @@ class ServiceTests(unittest.TestCase):
         with redirect_stdout(io.StringIO()):
             service.delete_student(students)
 
-        self.assertEqual([student.id for student in students], ["001"])
+        self.assertEqual([student.student_id for student in students], ["001"])
         save_student.assert_called_once_with(students)
 
     @patch("service.storage.save_student")
@@ -88,7 +88,7 @@ class ServiceTests(unittest.TestCase):
         with redirect_stdout(io.StringIO()):
             service.modify_id(second, students)
 
-        self.assertEqual(second.id, "003")
+        self.assertEqual(second.student_id, "003")
         save_student.assert_called_once_with(students)
 
     @patch("service.storage.save_student")

@@ -1,17 +1,17 @@
 class Student:
     def __init__(
             self,
-            id:str,
+            student_id:str,
             name:str,
             age:int,
             score:float,):
         """
-        :param id: 学号
+        :param student_id: 学号
         :param name: 姓名
         :param age: 年龄
         :param score: 成绩
         """
-        self.id = id
+        self.student_id = student_id
         self.name=name
         if 0<age<=100:
             self.__age = age
@@ -27,7 +27,7 @@ class Student:
         输出学生姓名，学号，年龄，成绩的信息
         :return:学生的信息
         """
-        return f"姓名{self.name},年龄{self.__age},成绩{self.__score},学号:{str(self.id)}"
+        return f"姓名{self.name},年龄{self.__age},成绩{self.__score},学号:{str(self.student_id)}"
 
     def get_age(self):
         """
@@ -58,7 +58,7 @@ class Student:
         :return:
         """
         return {
-            "id": self.id,
+            "id": self.student_id,
             "name": self.name,
             "age": self.__age,
             "score": self.__score
@@ -67,7 +67,7 @@ class Student:
     @classmethod
     def from_dict(cls, data: dict):
         return cls(
-            id=data["id"],
+            student_id=data["id"],
             name=data["name"],
             age=data["age"],
             score=data["score"]

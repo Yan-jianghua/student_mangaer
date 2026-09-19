@@ -37,7 +37,7 @@ def add_student(students: list[Student]) -> None:
     """增加一名学生。"""
     while True:
         sid = input("请输入要增加的学生的学号")
-        if any(student.id == sid for student in students):
+        if any(student.student_id == sid for student in students):
             print("学号重复，请重新输入")
             continue
         break
@@ -60,7 +60,7 @@ def show_students(students: list[Student]) -> None:
 
     print("学号\t姓名\t年龄\t成绩")
     for student in students:
-        print(f"{student.id}\t{student.name}\t{student.get_age()}\t{student.get_score()}")
+        print(f"{student.student_id}\t{student.name}\t{student.get_age()}\t{student.get_score()}")
 
 
 def find_student(students: list[Student]) -> None:
@@ -79,7 +79,7 @@ def find_student(students: list[Student]) -> None:
 
         if query_method == 1:
             sid = input("请输入你要查询学生的学号：")
-            matches = [student for student in students if student.id == sid]
+            matches = [student for student in students if student.student_id == sid]
         elif query_method == 2:
             name = input("请输入你要查找的学生姓名：")
             matches = [student for student in students if student.name == name]
@@ -113,7 +113,7 @@ def find_student(students: list[Student]) -> None:
 
         print("学号\t姓名\t年龄\t成绩")
         for student in matches:
-            print(f"{student.id}\t{student.name}\t{student.get_age()}\t{student.get_score()}")
+            print(f"{student.student_id}\t{student.name}\t{student.get_age()}\t{student.get_score()}")
 
 
 def delete_student(students: list[Student]) -> None:
@@ -125,7 +125,7 @@ def delete_student(students: list[Student]) -> None:
             return
 
         for student in students:
-            if student.id == delete_id:
+            if student.student_id == delete_id:
                 students.remove(student)
                 storage.save_student(students)
                 print("删除成功")
@@ -139,14 +139,14 @@ def modify_id(student: Student, students: list[Student]) -> None:
     while True:
         sid = input("请输入修改后的学号：")
         duplicate = any(
-            other_student is not student and other_student.id == sid
+            other_student is not student and other_student.student_id == sid
             for other_student in students
         )
         if duplicate:
             print("学号重复，请重新输入")
             continue
 
-        student.id = sid
+        student.student_id = sid
         storage.save_student(students)
         print("修改成功")
         return
@@ -178,7 +178,7 @@ def modify_student(students: list[Student]) -> None:
             return
 
         student = next(
-            (item for item in students if item.id == modify_sid),
+            (item for item in students if item.student_id == modify_sid),
             None,
         )
         if student is None:
