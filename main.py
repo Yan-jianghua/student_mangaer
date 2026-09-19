@@ -1,12 +1,11 @@
 # 学生管理系统 —— 项目入口文件
 import service
 import storage
-# 主菜单
-def menu(students):
-    """
 
-    :type students: list
-    """
+
+# 主菜单
+def menu(students: list) -> None:
+    """显示主菜单并处理用户操作。"""
     print("欢迎进入学生管理系统")
     while True:
         print("=========学生管理系统启动=============")
@@ -43,10 +42,6 @@ def menu(students):
             break
         else:
             print("输入有误请输入正确的序号")
-
-
-
-
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 import storage
 from models import Student
 
+
 def _input_age() -> int:
     """持续读取输入，直到获得有效年龄。"""
     valid_age: int | None = None
@@ -47,7 +48,7 @@ def add_student(students: list[Student]) -> None:
     age = _input_age()
     score = _input_score("成绩：", "请输入正确的成绩")
 
-    students.append(Student(sid,name,age,score))
+    students.append(Student(sid, name, age, score))
     storage.save_student(students)
     print("添加成功")
 
@@ -60,7 +61,10 @@ def show_students(students: list[Student]) -> None:
 
     print("学号\t姓名\t年龄\t成绩")
     for student in students:
-        print(f"{student.student_id}\t{student.name}\t{student.get_age()}\t{student.get_score()}")
+        print(
+            f"{student.student_id}\t{student.name}\t"
+            f"{student.get_age()}\t{student.get_score()}"
+        )
 
 
 def find_student(students: list[Student]) -> None:
@@ -113,7 +117,10 @@ def find_student(students: list[Student]) -> None:
 
         print("学号\t姓名\t年龄\t成绩")
         for student in matches:
-            print(f"{student.student_id}\t{student.name}\t{student.get_age()}\t{student.get_score()}")
+            print(
+                f"{student.student_id}\t{student.name}\t"
+                f"{student.get_age()}\t{student.get_score()}"
+            )
 
 
 def delete_student(students: list[Student]) -> None:
@@ -161,10 +168,12 @@ def modify_name(student: Student, students: list[Student]) -> None:
 
 def modify_score(student: Student, students: list[Student]) -> None:
     """修改学生成绩。"""
-    student.set_score(_input_score(
-        "请输入修改后学生的成绩：",
-        "成绩输入有误，请重新输入",
-    ))
+    student.set_score(
+        _input_score(
+            "请输入修改后学生的成绩：",
+            "成绩输入有误，请重新输入",
+        )
+    )
     storage.save_student(students)
     print("修改成功")
 

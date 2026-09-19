@@ -66,11 +66,10 @@ class StudentTests(unittest.TestCase):
 
         self.assertEqual(str(student), "姓名小明,年龄18,成绩95,学号:001")
 
-
     def test_from_dict(self):
         data = {
             "id": "001",
-            "name":"小华",
+            "name": "小华",
             "age": 18,
             "score": 95,
         }
@@ -80,5 +79,7 @@ class StudentTests(unittest.TestCase):
         self.assertEqual(student.name, "小华")
         self.assertEqual(student.get_age(), 18)
         self.assertEqual(student.get_score(), 95)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -26,7 +26,6 @@ class MainMenuTests(unittest.TestCase):
         statistics_students,
         save_student,
     ):
-
         students = []
         with redirect_stdout(io.StringIO()):
             main.menu(students)
@@ -42,7 +41,6 @@ class MainMenuTests(unittest.TestCase):
     @patch("main.storage.save_student")
     @patch("builtins.input", side_effect=["abc", "9", "0"])
     def test_menu_handles_invalid_options(self, _input, save_student):
-
         students = []
         output = io.StringIO()
 
@@ -52,7 +50,7 @@ class MainMenuTests(unittest.TestCase):
         text = output.getvalue()
         self.assertIn("请输入正确的序号", text)
         self.assertIn("输入有误请输入正确的序号", text)
-        save_student.assert_called_once_with([])
+        save_student.assert_called_once_with(students)
 
 
 if __name__ == "__main__":
