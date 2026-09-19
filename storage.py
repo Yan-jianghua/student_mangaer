@@ -1,10 +1,13 @@
 import json
 from pathlib import Path
+
 from models import Student
+
+
 DATA_FILE = Path(__file__).with_name("students.json")
 
 
-def _is_valid_student(student):
+def _is_valid_student(student: object) -> bool:
     """判断一条学生数据是否具有系统所需的完整结构。"""
     if not isinstance(student, dict):
         return False
@@ -24,15 +27,16 @@ def _is_valid_student(student):
     )
 
 
-def save_student(students, data_file=DATA_FILE):
+def save_student(students: list[Student], data_file: Path = DATA_FILE) -> None:
     """把学生列表保存到 JSON 文件。"""
-    data = []
+    data: list[dict] = []
     for student in students:
         data.append(student.to_dict())
     with data_file.open("w", encoding="utf-8") as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
-def load_student(data_file=DATA_FILE):
+
+def load_student(data_file: Path = DATA_FILE) -> list[Student]:
     """从 JSON 文件读取学生列表；文件不存在或损坏时返回空列表。"""
     if not data_file.exists():
         return []
@@ -45,12 +49,11 @@ def load_student(data_file=DATA_FILE):
         return []
 
     if isinstance(data, list) and all(_is_valid_student(item) for item in data):
-        students = []
+        students: list[Student] = []
         for student_data in data:
             student = Student.from_dict(student_data)
             students.append(student)
         return students
-
 
     print("数据格式异常，将采用空列表，如有数据丢失请联系工作人员")
     return []
