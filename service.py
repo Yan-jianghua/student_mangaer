@@ -159,6 +159,13 @@ def modify_id(student: Student, students: list[Student]) -> None:
         return
 
 
+def modify_age(student: Student, students: list[Student]) -> None:
+    """修改学生年龄。"""
+    student.set_age(_input_age())
+    storage.save_student(students)
+    print("修改成功")
+
+
 def modify_name(student: Student, students: list[Student]) -> None:
     """修改学生姓名。"""
     student.name = input("请输入修改后学生的姓名：")
@@ -198,7 +205,8 @@ def modify_student(students: list[Student]) -> None:
         while True:
             print("修改姓名请按-------1")
             print("修改学号请按-------2")
-            print("修改成绩请按-------3")
+            print("修改年龄请按-------3")
+            print("修改成绩请按-------4")
             print("修改其他学生请按---0")
             try:
                 modify_select = int(input("请输入你要进行的操作："))
@@ -211,6 +219,8 @@ def modify_student(students: list[Student]) -> None:
             elif modify_select == 2:
                 modify_id(selected_student, students)
             elif modify_select == 3:
+                modify_age(selected_student, students)
+            elif modify_select == 4:
                 modify_score(selected_student, students)
             elif modify_select == 0:
                 break
@@ -227,6 +237,8 @@ def statistics_students(students: list[Student]) -> None:
     scores = [student.get_score() for student in students]
     max_score = max(scores)
     min_score = min(scores)
+    passed_count = sum(score >= 60 for score in scores)
+    pass_rate = passed_count / len(students) * 100
     first_students = [
         student.name for student in students if student.get_score() == max_score
     ]
@@ -238,6 +250,8 @@ def statistics_students(students: list[Student]) -> None:
     print(f"最高分为{first_students},{max_score}分")
     print(f"最低分为{last_students},{min_score}分")
     print(f"平均分{sum(scores) / len(scores):.2f}")
+    print(f"及格人数:{passed_count}")
+    print(f"及格率:{pass_rate:.2f}%")
 
 
 def sort_students_by_score(students: list[Student]) -> list[Student]:

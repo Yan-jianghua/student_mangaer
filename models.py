@@ -14,14 +14,8 @@ class Student:
         """
         self.student_id = student_id
         self.name = name
-        if 0 < age <= 100:
-            self.__age = age
-        else:
-            raise ValueError("年龄应在1~100区间")
-        if 0 <= score <= 100:
-            self.__score = score
-        else:
-            raise ValueError("成绩应在0~100区间")
+        self.set_age(age)
+        self.set_score(score)
 
     def __str__(self) -> str:
         """
@@ -54,7 +48,11 @@ class Student:
             self.__score = score
         else:
             raise ValueError("成绩应在0~100之间")
-
+    def set_age(self, age: int) -> None:
+        if 0 < age <= 100:
+            self.__age = age
+        else:
+            raise ValueError("年龄应该大于零小于等于100")
     def to_dict(self) -> dict:
         """
         将学生类的信息转化为字典格式

@@ -151,6 +151,40 @@ class ServiceTests(unittest.TestCase):
             [95, 85, 78],
         )
 
+    @patch("service.storage.save_student")
+    @patch("builtins.input", side_effect=["0", "101", "20"])
+    def test_modify_age_retries_invalid_value(self, _input, save_student):
+        student = Student("001", "小明", 18, 95)
+        students = [student]
+
+        with redirect_stdout(io.StringIO()):
+            service.modify_age(student, students)
+            self.assertEqual(student.get_age(), 20)
+            save_student.assert_called_once_with(students)
+    @patch("service.modify_age")
+    @patch("builtins.input", side_effect=["001", "3", "0", "*"])
+    def test_modify_student_routes_age_option(self, _input, modify_age):
+        student = Student("001", "小明", 18, 95)
+        students = [student]
+
+        with redirect_stdout(io.StringIO()):
+            service.modify_student(students)
+
+        modify_age.assert_called_once_with(student, students)
+
+    def test_statistics_students_reports_pass_rate(self):
+        students = [
+            Student("001","小明", 18, 95),
+            Student("002","小猫", 17, 58),
+
+        ]
+        output = io.StringIO()
+        with redirect_stdout(output):
+            service.statistics_students(students)
+
+        text = output.getvalue()
+        self.assertIn("及格人数:1",text)
+        self.assertIn("及格率:50.00%",text)
 
 if __name__ == "__main__":
     unittest.main()

@@ -80,6 +80,24 @@ class StudentTests(unittest.TestCase):
         self.assertEqual(student.get_age(), 18)
         self.assertEqual(student.get_score(), 95)
 
+    def test_set_age(self):
+        student = Student("001", "小明", 18, 60)
+
+        student.set_age(20)
+
+        self.assertEqual(student.get_age(), 20)
+
+    def test_set_age_rejects_invalid_values(self):
+        student = Student("001", "小明", 18, 60)
+
+        with self.assertRaises(ValueError):
+            student.set_age(0)
+
+        with self.assertRaises(ValueError):
+            student.set_age(101)
+
+        self.assertEqual(student.get_age(), 18)
+
 
 if __name__ == "__main__":
     unittest.main()
