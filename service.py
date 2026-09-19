@@ -238,3 +238,7 @@ def statistics_students(students: list[Student]) -> None:
     print(f"最高分为{first_students},{max_score}分")
     print(f"最低分为{last_students},{min_score}分")
     print(f"平均分{sum(scores) / len(scores):.2f}")
+
+
+def sort_students_by_score(students: list[Student]) -> list[Student]:
+    return sorted(students, key=lambda student: student.get_score(), reverse=True)

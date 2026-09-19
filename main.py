@@ -16,6 +16,7 @@ def menu(students: list) -> None:
         print("4.删除学生信息")
         print("5.显示全部学生信息")
         print("6.统计班级情况")
+        print("7.按成绩从高到低排序")
         print("0.退出系统")
 
         try:
@@ -36,6 +37,9 @@ def menu(students: list) -> None:
             service.show_students(students)
         elif select_num == 6:
             service.statistics_students(students)
+        elif select_num == 7:
+            sorted_student = service.sort_students_by_score(students)
+            service.show_students(sorted_student)
         elif select_num == 0:
             storage.save_student(students)
             print("退出系统成功，再见")

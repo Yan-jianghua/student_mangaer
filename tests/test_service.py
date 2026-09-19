@@ -139,6 +139,18 @@ class ServiceTests(unittest.TestCase):
 
         self.assertIn("暂无学生", output.getvalue())
 
+    def test_sort_students_by_score(self):
+        students = [
+            Student("002", "小明", 18, 95),
+            Student("003", "小红", 17, 78),
+            Student("004", "小华", 25, 85),
+        ]
+        sorted_students = service.sort_students_by_score(students)
+        self.assertEqual(
+            [student.get_score() for student in sorted_students],
+            [95, 85, 78],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

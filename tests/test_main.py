@@ -52,6 +52,28 @@ class MainMenuTests(unittest.TestCase):
         self.assertIn("输入有误请输入正确的序号", text)
         save_student.assert_called_once_with(students)
 
+    @patch("main.storage.save_student")
+    @patch("main.service.show_students")
+    @patch("main.service.sort_students_by_score")
+    @patch("builtins.input", side_effect=["7", "0"])
+    def test_menu_routes_sort_option(
+        self,
+        _input,
+        sort_students_by_score,
+        show_students,
+        save_student,
+    ):
+        students = []
+        sorted_students = ["排序后的学生"]
+        sort_students_by_score.return_value = sorted_students
+
+        with redirect_stdout(io.StringIO()):
+            main.menu(students)
+
+        sort_students_by_score.assert_called_once_with(students)
+        show_students.assert_called_once_with(sorted_students)
+        save_student.assert_called_once_with(students)
+
 
 if __name__ == "__main__":
     unittest.main()
