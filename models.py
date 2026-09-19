@@ -63,3 +63,15 @@ class Student:
             "age": self.__age,
             "score": self.__score
         }
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        return cls(
+            id=data["id"],
+            name=data["name"],
+            age=data["age"],
+            score=data["score"]
+        )
+
+
+

@@ -47,12 +47,10 @@ def load_student(data_file=DATA_FILE):
     if isinstance(data, list) and all(_is_valid_student(item) for item in data):
         students = []
         for student_data in data:
-            student = to_class(student_data)
+            student = Student.from_dict(student_data)
             students.append(student)
         return students
 
 
     print("数据格式异常，将采用空列表，如有数据丢失请联系工作人员")
     return []
-def to_class(student):
-    return Student(student["id"],student["name"],student["age"],student["score"])
