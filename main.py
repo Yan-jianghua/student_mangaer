@@ -2,7 +2,7 @@
 import service
 import storage
 # 主菜单
-def menu():
+def menu(students):
     print("欢迎进入学生管理系统")
     while True:
         print("=========学生管理系统启动=============")
@@ -43,7 +43,8 @@ def menu():
 
 
 
-students = storage.load_student()
+
 
 if __name__ == "__main__":
-    menu()
+    students = storage.load_student()
+    menu(students)
