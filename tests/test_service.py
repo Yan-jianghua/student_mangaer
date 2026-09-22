@@ -34,6 +34,34 @@ class ServiceTests(unittest.TestCase):
         self.assertEqual(students[-1].student_id, "002")
         save_student.assert_called_once_with(students)
 
+    @patch("service.storage.save_student")
+    @patch("builtins.input", side_effect=["", "   ", "001", "小明", "18", "95"])
+    def test_add_student_rejects_blank_id(self, _input, save_student):
+        students = []
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            service.add_student(students)
+
+        self.assertEqual(len(students), 1)
+        self.assertEqual(students[0].student_id, "001")
+        self.assertEqual(output.getvalue().count("学号不能为空"), 2)
+        save_student.assert_called_once_with(students)
+
+    @patch("service.storage.save_student")
+    @patch("builtins.input", side_effect=["001", "", "   ", "小明", "18", "95"])
+    def test_add_student_rejects_blank_name(self, _input, save_student):
+        students = []
+        output = io.StringIO()
+
+        with redirect_stdout(output):
+            service.add_student(students)
+
+        self.assertEqual(len(students), 1)
+        self.assertEqual(students[0].name, "小明")
+        self.assertEqual(output.getvalue().count("姓名不能为空"), 2)
+        save_student.assert_called_once_with(students)
+
     def test_show_students(self):
         students = [Student("001", "小明", 18, 95)]
         output = io.StringIO()

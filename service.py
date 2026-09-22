@@ -37,14 +37,28 @@ def _input_score(prompt: str, error_message: str) -> float:
 def add_student(students: list[Student]) -> None:
     """增加一名学生。"""
     while True:
-        sid = input("请输入要增加的学生的学号")
+        sid = input("请输入要增加的学生的学号").strip()
         if any(student.student_id == sid for student in students):
             print("学号重复，请重新输入")
             continue
+        if not sid:
+            print(f"学号不能为空")
+            continue
+        try:
+            test_sid = int(sid)
+        except ValueError:
+            print("学号当为整数字符串")
+            continue
         break
-
-    name = input("请输入学生姓名：")
-
+    while True:
+        name = input("请输入学生姓名：").strip()
+        if not name:
+            print("姓名不能为空")
+            continue
+        if any(char in name for char in "@#$%^&*?-=+"):
+            print("姓名中不能包含"+"@"+"#"+"$"+"%"+"^"+"&"+"*"+"?"+"-"+"="+"+"+"等符号")
+            continue
+        break
     age = _input_age()
     score = _input_score("成绩：", "请输入正确的成绩")
 
